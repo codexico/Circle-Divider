@@ -39,5 +39,73 @@ $(function() {
 
     $('#results').html(r);
 
+    circulo(passos, partes, partes_array);
   })
+  function drawTextAlongArc(context, str, centerX, centerY, radius, startAngle, endAngle, color) {
+
+    context.font = "24pt Calibri";
+    context.textAlign = "center";
+    context.fillStyle = color;
+    context.strokeStyle = color;
+    context.lineWidth = 4;
+
+    //spacing
+    str = " " + str + " ";
+    var lenghtAngle = endAngle - startAngle;
+
+    context.save();
+    context.translate(centerX, centerY);
+
+    //arc começa na direita e texto começa em cima???
+    context.rotate(startAngle + (Math.PI / 2));
+
+    //letras
+    for(var n = 0; n < str.length; n++) {
+      context.rotate(lenghtAngle / str.length);
+      context.save();
+      context.translate(0, (-1 * radius) - 6);
+      var c = str[n];
+      context.fillText(c, 0, 0);
+      context.restore();
+    }
+    context.restore();
+  }
+
+  function circulo(passos, partes, partes_array) {
+    var canvas = document.getElementById("circleCanvas");
+    if(canvas.getContext) {//verifica se o navegador suporta
+      var context = canvas.getContext('2d');
+    }
+
+    var centerX = canvas.width / 2;
+    var centerY = canvas.height / 2;
+    var radius = canvas.width / 3;
+    var lineWidth = 1;
+    var startingAngle = 0;
+    var antiClockwise = false;
+    var arco = (Math.PI * 2) / partes;
+    var endingAngle = startingAngle + arco;
+
+    while(partes--) {
+      var color = (Math.random() * (0xFFFFFF + 1) << 0).toString(16);
+
+      context.beginPath();
+
+      drawTextAlongArc(context, partes_array[partes].toString(), centerX, centerY, radius, startingAngle, endingAngle, color)
+
+      context.arc(centerX, centerY, radius, startingAngle, endingAngle, antiClockwise);
+      context.lineTo(centerX, centerY);
+      context.closePath();
+      context.lineWidth = lineWidth;
+      context.fillStyle = color;
+      context.fill();
+      context.strokeStyle = "#000000";
+      context.stroke();
+
+      //next size
+      startingAngle = endingAngle;
+      endingAngle += arco;
+    }
+  }
+
 });
