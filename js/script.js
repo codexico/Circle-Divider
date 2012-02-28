@@ -1,7 +1,10 @@
 /* Author: codexico
  * 20120226
  */
-var mostrarResultado = function(partes_array) {
+
+var CircleDivider = {}
+
+CircleDivider.mostrarResultado = function(partes_array) {
   r = "<ul>";
   for(var i = 1, j = partes_array.length; i <= j; i++) {
     r += "<li> Fatia " + i + " : ";
@@ -14,7 +17,7 @@ var mostrarResultado = function(partes_array) {
 },
 
 
-calculaCirculo = function(passos, partes) {
+CircleDivider.calculaCirculo = function(passos, partes) {
   var tamanho, resto, partes_array, i, j, r;
   //calcula tamanho base de cada parte do circulo
   tamanho = parseInt(Math.floor(passos / partes), 10);
@@ -35,13 +38,13 @@ calculaCirculo = function(passos, partes) {
     partes_array[j] += 1;
   }
 
-  mostrarResultado(partes_array);
+  this.mostrarResultado(partes_array);
 
-  desenhaCirculo(passos, partes, partes_array);
+  this.desenhaCirculo(passos, partes, partes_array);
 },
 
 
-drawTextAlongArc = function(context, str, centerX, centerY, radius, startAngle, endAngle, color) {
+CircleDivider.drawTextAlongArc = function(context, str, centerX, centerY, radius, startAngle, endAngle, color) {
   context.font = "24pt Calibri";
   context.textAlign = "center";
   context.fillStyle = color;
@@ -71,7 +74,7 @@ drawTextAlongArc = function(context, str, centerX, centerY, radius, startAngle, 
 }, 
 
 
-desenhaCirculo = function(passos, partes, partes_array) {
+CircleDivider.desenhaCirculo = function(passos, partes, partes_array) {
   var canvas = document.getElementById("circleCanvas");
   if(canvas.getContext) {//verifica se o navegador suporta
     var context = canvas.getContext('2d');
@@ -93,7 +96,7 @@ desenhaCirculo = function(passos, partes, partes_array) {
 
     context.beginPath();
 
-    drawTextAlongArc(context, partes_array[partes].toString(), centerX, centerY, radius, startingAngle, endingAngle, color)
+    this.drawTextAlongArc(context, partes_array[partes].toString(), centerX, centerY, radius, startingAngle, endingAngle, color)
 
     context.arc(centerX, centerY, radius, startingAngle, endingAngle, antiClockwise);
     context.lineTo(centerX, centerY);
@@ -108,11 +111,26 @@ desenhaCirculo = function(passos, partes, partes_array) {
     startingAngle = endingAngle;
     endingAngle += arco;
   }
-}, 
+}
 
 
-colour = ( function() {
-  var index = 0, colours = ["#FF0000", "#FFFFFF", "#00FF00", "#FE57A1", "#0000FF", "#00FFFF", "#000000", "#FFFF00", "#FF00FF", "#CCCCCC"];
+CircleDivider.init = function () {
+  self = this;
+  $('#divider').submit(function(e) {
+    e.preventDefault();
+    var passos, partes;
+    //dados do formulario
+    passos = parseInt($(this).find('#passos').val(), 10);
+    partes = parseInt($(this).find('#partes').val(), 10);
+
+    self.calculaCirculo(passos, partes);
+  });  
+}
+
+
+var colour = ( function() {
+  var index = 0,
+  colours = ["#FF0000", "#FFFFFF", "#00FF00", "#FE57A1", "#0000FF", "#00FFFF", "#000000", "#FFFF00", "#FF00FF", "#CCCCCC"];
 
   return {
     next : function() {
@@ -129,13 +147,5 @@ colour = ( function() {
 
 
 $(function($) {
-  $('#divider').submit(function(e) {
-    e.preventDefault();
-    var passos, partes;
-    //dados do formulario
-    passos = parseInt($(this).find('#passos').val(), 10);
-    partes = parseInt($(this).find('#partes').val(), 10);
-
-    calculaCirculo(passos, partes);
-  });
+  CircleDivider.init();
 }(jQuery));
