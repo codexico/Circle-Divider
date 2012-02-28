@@ -217,15 +217,16 @@ td { vertical-align: top; }
 /* ==|== primary styles =====================================================
    Author:
    ========================================================================== */
-
-
-
-
-
-
-
-
-
+#divider {
+  float: left;
+}
+#results {
+  float: right;
+  margin: 20px;
+}
+#circleCanvas {
+  float: right;
+}
 
 
 

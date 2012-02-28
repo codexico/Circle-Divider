@@ -140,6 +140,7 @@ var colour = ( function() {
       return colours[index++];
     },
     random : function() {
+      //http://paulirish.com/2009/random-hex-color-code-snippets/
       return "#" + (Math.random() * (0xFFFFFF + 1) << 0).toString(16);
     }
   }
