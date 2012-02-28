@@ -71,6 +71,25 @@ $(function() {
     context.restore();
   }
 
+  var colour = (function () {
+    var index = 0,
+    //colours = ["#FF0000", "#FFFF00", "#FFFFFF", "#FF00FF", "#CCCCCC", "#FE57A1", "#00FF00", "#0000FF", "#FFF0F0"]
+    colours = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#00FFFF", "#FF00FF", "#CCCCCC", "#FE57A1"]
+    
+    return {
+      next : function () {
+        if (index >= colours.length) {
+          index = 0;
+        }
+        console.log(index)
+        return colours[index++];
+      },
+      random : function () {
+        return "#" + (Math.random() * (0xFFFFFF + 1) << 0).toString(16);
+      }
+    }
+  }());
+
   function circulo(passos, partes, partes_array) {
     var canvas = document.getElementById("circleCanvas");
     if(canvas.getContext) {//verifica se o navegador suporta
@@ -87,7 +106,7 @@ $(function() {
     var endingAngle = startingAngle + arco;
 
     while(partes--) {
-      var color = (Math.random() * (0xFFFFFF + 1) << 0).toString(16);
+      var color =  colour.next();
 
       context.beginPath();
 
